@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>待办事项</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="app">
+    <h1 class="title">待办事项</h1>
+
+    <form class="add-form" id="add-form" autocomplete="off">
+      <input
+        class="add-input"
+        id="add-input"
+        type="text"
+        placeholder="今天要做点什么？"
+        maxlength="200"
+      >
+      <button class="add-btn" type="submit">添加</button>
+    </form>
+
+    <p class="summary">
+      共 <span id="total-count">0</span> 项，
+      待完成 <span id="pending-count">0</span> 项
+    </p>
+
+    <ul class="list" id="todo-list"></ul>
+
+    <p class="empty" id="empty-tip" hidden>暂无待办事项，添加一条开始吧</p>
+
+    <button class="clear-btn" id="clear-btn" type="button" hidden>清除已完成</button>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
