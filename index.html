@@ -11,14 +11,22 @@
     <h1 class="title">待办事项</h1>
 
     <form class="add-form" id="add-form" autocomplete="off">
-      <input
-        class="add-input"
-        id="add-input"
-        type="text"
-        placeholder="今天要做点什么？"
-        maxlength="200"
-      >
-      <button class="add-btn" type="submit">添加</button>
+      <div class="add-row">
+        <input
+          class="add-input"
+          id="add-input"
+          type="text"
+          placeholder="今天要做点什么？"
+          maxlength="200"
+        >
+        <input
+          class="due-input"
+          id="due-input"
+          type="date"
+          title="目标完成日期"
+        >
+        <button class="add-btn" type="submit">添加</button>
+      </div>
     </form>
 
     <p class="summary">

@@ -2,6 +2,7 @@ const STORAGE_KEY = "todos";
 
 const form = document.getElementById("add-form");
 const input = document.getElementById("add-input");
+const dueInput = document.getElementById("due-input");
 const listEl = document.getElementById("todo-list");
 const emptyTip = document.getElementById("empty-tip");
 const totalCount = document.getElementById("total-count");
@@ -29,6 +30,24 @@ function formatTime(ts) {
   return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
 }
 
+function today() {
+  const d = new Date();
+  const pad = (n) => String(n).padStart(2, "0");
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+}
+
+function formatDue(value) {
+  const [y, m, d] = value.split("-").map(Number);
+  return `${y}年${m}月${d}日`;
+}
+
+function dueState(todo) {
+  if (todo.done || !todo.due) return "";
+  if (todo.due < today()) return "overdue";
+  if (todo.due === today()) return "today";
+  return "";
+}
+
 function render() {
   listEl.innerHTML = "";
 
@@ -52,7 +71,7 @@ function render() {
 
     const time = document.createElement("span");
     time.className = "item-time";
-    time.textContent = formatTime(todo.createdAt);
+    time.textContent = "创建 " + formatTime(todo.createdAt);
 
     const del = document.createElement("button");
     del.type = "button";
@@ -65,7 +84,18 @@ function render() {
       render();
     });
 
-    li.append(checkbox, text, time, del);
+    if (todo.due) {
+      const due = document.createElement("span");
+      const state = dueState(todo);
+      due.className = "item-due" + (state ? " " + state : "");
+      due.textContent = "截止 " + formatDue(todo.due);
+      if (state === "overdue") due.title = "已逾期";
+      if (state === "today") due.title = "今天到期";
+      li.append(checkbox, text, time, due, del);
+    } else {
+      li.append(checkbox, text, time, del);
+    }
+
     listEl.appendChild(li);
   });
 
@@ -83,11 +113,13 @@ form.addEventListener("submit", (e) => {
   todos.push({
     id: Date.now() + Math.random(),
     text,
+    due: dueInput.value || null,
     done: false,
     createdAt: Date.now(),
   });
 
   input.value = "";
+  dueInput.value = "";
   save();
   render();
   input.focus();

@@ -42,13 +42,14 @@ body {
   font-weight: 600;
 }
 
-.add-form {
+.add-row {
   display: flex;
   gap: 8px;
 }
 
 .add-input {
   flex: 1;
+  min-width: 0;
   padding: 10px 12px;
   font-size: 15px;
   color: var(--text);
@@ -62,6 +63,29 @@ body {
 .add-input:focus {
   border-color: var(--accent);
   box-shadow: 0 0 0 3px rgba(47, 111, 235, 0.15);
+}
+
+.due-input {
+  flex: none;
+  padding: 10px 10px;
+  font-size: 14px;
+  font-family: inherit;
+  color: var(--text);
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  outline: none;
+  cursor: pointer;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.due-input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(47, 111, 235, 0.15);
+}
+
+.due-input::-webkit-calendar-picker-indicator {
+  cursor: pointer;
 }
 
 .add-btn {
@@ -126,6 +150,36 @@ body {
   font-size: 12px;
   color: var(--muted);
   flex: none;
+  white-space: nowrap;
+}
+
+.item-due {
+  font-size: 12px;
+  flex: none;
+  white-space: nowrap;
+  padding: 2px 8px;
+  border-radius: 999px;
+  color: #6b4b00;
+  background: #fff4d6;
+  border: 1px solid #f0dfae;
+}
+
+.item-due.overdue {
+  color: #8a1f1f;
+  background: #fdecec;
+  border-color: #f2c4c4;
+}
+
+.item-due.today {
+  color: #7a4a00;
+  background: #ffe9c9;
+  border-color: #f5cf94;
+}
+
+.item.done .item-due {
+  color: var(--done);
+  background: #f2f3f5;
+  border-color: var(--border);
 }
 
 .delete-btn {
