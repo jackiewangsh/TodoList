@@ -9,11 +9,15 @@ const totalCount = document.getElementById("total-count");
 const pendingCount = document.getElementById("pending-count");
 const doneCount = document.getElementById("done-count");
 const filterEl = document.getElementById("filter");
+const sortBtn = document.getElementById("sort-btn");
 const clearBtn = document.getElementById("clear-btn");
 const exportBtn = document.getElementById("export-btn");
 
 let todos = load();
 let filter = "all";
+let sortMode = 0;
+
+const SORT_LABELS = ["排序：默认", "排序：截止升序", "排序：截止降序"];
 
 function load() {
   try {
@@ -53,9 +57,23 @@ function dueState(todo) {
 }
 
 function visibleTodos() {
-  if (filter === "pending") return todos.filter((t) => !t.done);
-  if (filter === "done") return todos.filter((t) => t.done);
-  return todos;
+  let list = todos;
+  if (filter === "pending") list = list.filter((t) => !t.done);
+  if (filter === "done") list = list.filter((t) => t.done);
+  if (sortMode === 0) return list;
+
+  const withDue = list.filter((t) => t.due);
+  const noDue = list.filter((t) => !t.due);
+
+  withDue.sort((a, b) => {
+    if (a.due !== b.due) {
+      const r = a.due < b.due ? -1 : 1;
+      return sortMode === 1 ? r : -r;
+    }
+    return a.createdAt - b.createdAt;
+  });
+
+  return [...withDue, ...noDue];
 }
 
 function setStatus(todo, done) {
@@ -131,6 +149,9 @@ function render() {
   [...filterEl.children].forEach((btn) => {
     btn.classList.toggle("active", btn.dataset.filter === filter);
   });
+
+  sortBtn.textContent = SORT_LABELS[sortMode];
+  sortBtn.classList.toggle("active", sortMode !== 0);
 }
 
 form.addEventListener("submit", (e) => {
@@ -206,6 +227,11 @@ function exportTxt() {
 }
 
 exportBtn.addEventListener("click", exportTxt);
+
+sortBtn.addEventListener("click", () => {
+  sortMode = (sortMode + 1) % 3;
+  render();
+});
 
 clearBtn.addEventListener("click", () => {
   todos = todos.filter((t) => !t.done);

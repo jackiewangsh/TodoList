@@ -29,7 +29,7 @@ body {
 
 .app {
   width: 100%;
-  max-width: 560px;
+  max-width: 728px;
   background: var(--panel);
   border: 1px solid var(--border);
   border-radius: 12px;
@@ -128,6 +128,37 @@ body {
   margin: 0;
   font-size: 13px;
   color: var(--muted);
+}
+
+.toolbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.sort-btn {
+  padding: 6px 12px;
+  font-size: 12px;
+  font-family: inherit;
+  color: var(--muted);
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+
+.sort-btn:hover {
+  color: var(--text);
+  border-color: var(--accent);
+}
+
+.sort-btn.active {
+  color: var(--accent);
+  background: #eaf1ff;
+  border-color: var(--accent);
+  font-weight: 600;
 }
 
 .filter {
