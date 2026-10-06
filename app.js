@@ -26,7 +26,7 @@ function save() {
 function formatTime(ts) {
   const d = new Date(ts);
   const pad = (n) => String(n).padStart(2, "0");
-  return `${pad(d.getMonth() + 1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
 }
 
 function render() {
