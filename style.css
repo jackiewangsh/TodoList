@@ -157,6 +157,10 @@ body {
 .item.done .item-text {
   color: var(--done);
   text-decoration: line-through;
+  text-decoration-color: var(--accent);
+  text-decoration-thickness: 2px;
+  text-decoration-skip-ink: none;
+  opacity: 0.75;
 }
 
 .item-checkbox {
