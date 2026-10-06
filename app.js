@@ -10,6 +10,7 @@ const pendingCount = document.getElementById("pending-count");
 const doneCount = document.getElementById("done-count");
 const filterEl = document.getElementById("filter");
 const clearBtn = document.getElementById("clear-btn");
+const exportBtn = document.getElementById("export-btn");
 
 let todos = load();
 let filter = "all";
@@ -158,6 +159,53 @@ filterEl.addEventListener("click", (e) => {
   filter = btn.dataset.filter;
   render();
 });
+
+function buildExportText() {
+  const done = todos.filter((t) => t.done).length;
+  const lines = [
+    "待办事项导出",
+    "导出时间：" + formatTime(Date.now()),
+    `共 ${todos.length} 项，待完成 ${todos.length - done} 项，已完成 ${done} 项`,
+    "".padEnd(40, "-"),
+    "",
+  ];
+
+  if (!todos.length) {
+    lines.push("（暂无待办事项）", "");
+  }
+
+  todos.forEach((todo, index) => {
+    lines.push(`${index + 1}. [${todo.done ? "已完成" : "待完成"}] ${todo.text}`);
+    lines.push(`   创建：${formatTime(todo.createdAt)}`);
+    if (todo.due) lines.push(`   截止：${formatDue(todo.due)}`);
+    if (todo.done && todo.doneAt) lines.push(`   完成：${formatTime(todo.doneAt)}`);
+    lines.push("");
+  });
+
+  return lines.join("\r\n");
+}
+
+function exportTxt() {
+  const blob = new Blob(["\ufeff" + buildExportText()], {
+    type: "text/plain;charset=utf-8",
+  });
+  const url = URL.createObjectURL(blob);
+  const now = new Date();
+  const pad = (n) => String(n).padStart(2, "0");
+  const stamp =
+    `${now.getFullYear()}${pad(now.getMonth() + 1)}${pad(now.getDate())}` +
+    `_${pad(now.getHours())}${pad(now.getMinutes())}${pad(now.getSeconds())}`;
+
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = `待办事项_${stamp}.txt`;
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
+exportBtn.addEventListener("click", exportTxt);
 
 clearBtn.addEventListener("click", () => {
   todos = todos.filter((t) => !t.done);
