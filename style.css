@@ -1,12 +1,13 @@
 :root {
-  --bg: #f4f5f7;
-  --panel: #ffffff;
-  --border: #e3e6ea;
-  --text: #1f2328;
-  --muted: #6b7280;
-  --accent: #2f6feb;
-  --danger: #d64545;
-  --done: #9aa1ab;
+  --bg: #061a3a;
+  --panel: rgba(9, 32, 74, 0.72);
+  --border: rgba(96, 165, 250, 0.28);
+  --text: #e8f1ff;
+  --muted: #8fa8cc;
+  --accent: #22d3ee;
+  --accent-strong: #0ea5e9;
+  --danger: #f87171;
+  --done: #5f7495;
 }
 
 * {
@@ -20,7 +21,11 @@ body {
   align-items: flex-start;
   justify-content: center;
   padding: 48px 16px;
-  background: var(--bg);
+  background:
+    radial-gradient(1000px 500px at 12% -8%, rgba(34, 211, 238, 0.22), transparent 60%),
+    radial-gradient(900px 480px at 88% 8%, rgba(59, 130, 246, 0.28), transparent 62%),
+    linear-gradient(160deg, #071b3f 0%, #04203f 45%, #06162f 100%);
+  background-attachment: fixed;
   color: var(--text);
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft YaHei", sans-serif;
   line-height: 1.5;
@@ -33,13 +38,19 @@ body {
   border: 1px solid var(--border);
   border-radius: 12px;
   padding: 28px;
-  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+  backdrop-filter: blur(10px);
+  box-shadow:
+    0 0 0 1px rgba(34, 211, 238, 0.08),
+    0 20px 45px rgba(2, 10, 30, 0.55);
 }
 
 .title {
   margin: 0 0 20px;
   font-size: 24px;
   font-weight: 600;
+  letter-spacing: 2px;
+  color: #ffffff;
+  text-shadow: 0 0 18px rgba(34, 211, 238, 0.55);
 }
 
 .add-row {
@@ -53,16 +64,20 @@ body {
   padding: 10px 12px;
   font-size: 15px;
   color: var(--text);
-  background: #fff;
+  background: rgba(4, 20, 46, 0.75);
   border: 1px solid var(--border);
   border-radius: 8px;
   outline: none;
   transition: border-color 0.15s, box-shadow 0.15s;
 }
 
+.add-input::placeholder {
+  color: #6d86ad;
+}
+
 .add-input:focus {
   border-color: var(--accent);
-  box-shadow: 0 0 0 3px rgba(47, 111, 235, 0.15);
+  box-shadow: 0 0 0 3px rgba(34, 211, 238, 0.18);
 }
 
 .due-input {
@@ -71,36 +86,43 @@ body {
   font-size: 14px;
   font-family: inherit;
   color: var(--text);
-  background: #fff;
+  background: rgba(4, 20, 46, 0.75);
   border: 1px solid var(--border);
   border-radius: 8px;
   outline: none;
   cursor: pointer;
   transition: border-color 0.15s, box-shadow 0.15s;
+  color-scheme: dark;
 }
 
 .due-input:focus {
   border-color: var(--accent);
-  box-shadow: 0 0 0 3px rgba(47, 111, 235, 0.15);
+  box-shadow: 0 0 0 3px rgba(34, 211, 238, 0.18);
 }
 
 .due-input::-webkit-calendar-picker-indicator {
   cursor: pointer;
+  filter: invert(1) brightness(1.6);
 }
 
 .add-btn {
   padding: 10px 18px;
   font-size: 15px;
-  color: #fff;
-  background: var(--accent);
+  color: #03203a;
+  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-strong) 100%);
   border: none;
   border-radius: 8px;
+  font-weight: 600;
   cursor: pointer;
-  transition: background 0.15s;
+  transition: filter 0.15s, transform 0.1s;
 }
 
 .add-btn:hover {
-  background: #2559c4;
+  filter: brightness(1.1);
+}
+
+.add-btn:active {
+  transform: translateY(1px);
 }
 
 .summary {
@@ -123,7 +145,13 @@ body {
   border: 1px solid var(--border);
   border-radius: 8px;
   margin-bottom: 8px;
-  background: #fff;
+  background: rgba(5, 24, 54, 0.6);
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.item:hover {
+  border-color: rgba(34, 211, 238, 0.5);
+  background: rgba(8, 34, 74, 0.75);
 }
 
 .item.done .item-text {
@@ -159,26 +187,26 @@ body {
   white-space: nowrap;
   padding: 2px 8px;
   border-radius: 999px;
-  color: #6b4b00;
-  background: #fff4d6;
-  border: 1px solid #f0dfae;
+  color: #9fc9ff;
+  background: rgba(37, 99, 235, 0.18);
+  border: 1px solid rgba(96, 165, 250, 0.4);
 }
 
 .item-due.overdue {
-  color: #8a1f1f;
-  background: #fdecec;
-  border-color: #f2c4c4;
+  color: #ffc9c9;
+  background: rgba(220, 38, 38, 0.22);
+  border-color: rgba(248, 113, 113, 0.5);
 }
 
 .item-due.today {
-  color: #7a4a00;
-  background: #ffe9c9;
-  border-color: #f5cf94;
+  color: #ffe0a3;
+  background: rgba(217, 119, 6, 0.22);
+  border-color: rgba(251, 191, 36, 0.45);
 }
 
 .item.done .item-due {
   color: var(--done);
-  background: #f2f3f5;
+  background: rgba(148, 163, 184, 0.12);
   border-color: var(--border);
 }
 
@@ -214,13 +242,14 @@ body {
   padding: 9px;
   font-size: 14px;
   color: var(--danger);
-  background: #fff;
+  background: rgba(5, 24, 54, 0.6);
   border: 1px solid var(--border);
   border-radius: 8px;
   cursor: pointer;
-  transition: background 0.15s;
+  transition: background 0.15s, border-color 0.15s;
 }
 
 .clear-btn:hover {
-  background: #fdf2f2;
+  background: rgba(220, 38, 38, 0.18);
+  border-color: rgba(248, 113, 113, 0.5);
 }
