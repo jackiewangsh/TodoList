@@ -29,10 +29,19 @@
       </div>
     </form>
 
-    <p class="summary">
-      共 <span id="total-count">0</span> 项，
-      待完成 <span id="pending-count">0</span> 项
-    </p>
+    <div class="toolbar">
+      <p class="summary">
+        共 <span id="total-count">0</span> 项，
+        待完成 <span id="pending-count">0</span> 项，
+        已完成 <span id="done-count">0</span> 项
+      </p>
+
+      <div class="filter" id="filter">
+        <button type="button" class="filter-btn active" data-filter="all">全部</button>
+        <button type="button" class="filter-btn" data-filter="pending">待完成</button>
+        <button type="button" class="filter-btn" data-filter="done">已完成</button>
+      </div>
+    </div>
 
     <ul class="list" id="todo-list"></ul>
 

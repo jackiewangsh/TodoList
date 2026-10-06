@@ -7,9 +7,12 @@ const listEl = document.getElementById("todo-list");
 const emptyTip = document.getElementById("empty-tip");
 const totalCount = document.getElementById("total-count");
 const pendingCount = document.getElementById("pending-count");
+const doneCount = document.getElementById("done-count");
+const filterEl = document.getElementById("filter");
 const clearBtn = document.getElementById("clear-btn");
 
 let todos = load();
+let filter = "all";
 
 function load() {
   try {
@@ -48,22 +51,32 @@ function dueState(todo) {
   return "";
 }
 
+function visibleTodos() {
+  if (filter === "pending") return todos.filter((t) => !t.done);
+  if (filter === "done") return todos.filter((t) => t.done);
+  return todos;
+}
+
+function setStatus(todo, done) {
+  todo.done = done;
+  todo.doneAt = done ? Date.now() : null;
+  save();
+  render();
+}
+
 function render() {
   listEl.innerHTML = "";
 
-  todos.forEach((todo) => {
+  visibleTodos().forEach((todo) => {
     const li = document.createElement("li");
     li.className = "item" + (todo.done ? " done" : "");
 
-    const checkbox = document.createElement("input");
-    checkbox.type = "checkbox";
-    checkbox.className = "item-checkbox";
-    checkbox.checked = todo.done;
-    checkbox.addEventListener("change", () => {
-      todo.done = checkbox.checked;
-      save();
-      render();
-    });
+    const status = document.createElement("button");
+    status.type = "button";
+    status.className = "status-btn" + (todo.done ? " is-done" : "");
+    status.textContent = todo.done ? "已完成" : "待完成";
+    status.title = todo.done ? "点击标记为待完成" : "点击标记为已完成";
+    status.addEventListener("click", () => setStatus(todo, !todo.done));
 
     const text = document.createElement("span");
     text.className = "item-text";
@@ -71,7 +84,9 @@ function render() {
 
     const time = document.createElement("span");
     time.className = "item-time";
-    time.textContent = "创建 " + formatTime(todo.createdAt);
+    time.textContent = todo.done && todo.doneAt
+      ? "完成 " + formatTime(todo.doneAt)
+      : "创建 " + formatTime(todo.createdAt);
 
     const del = document.createElement("button");
     del.type = "button";
@@ -91,18 +106,30 @@ function render() {
       due.textContent = "截止 " + formatDue(todo.due);
       if (state === "overdue") due.title = "已逾期";
       if (state === "today") due.title = "今天到期";
-      li.append(checkbox, text, time, due, del);
+      li.append(status, text, time, due, del);
     } else {
-      li.append(checkbox, text, time, del);
+      li.append(status, text, time, del);
     }
 
     listEl.appendChild(li);
   });
 
+  const done = todos.filter((t) => t.done).length;
   totalCount.textContent = todos.length;
-  pendingCount.textContent = todos.filter((t) => !t.done).length;
+  pendingCount.textContent = todos.length - done;
+  doneCount.textContent = done;
   emptyTip.hidden = todos.length > 0;
-  clearBtn.hidden = !todos.some((t) => t.done);
+  emptyTip.textContent =
+    filter === "all"
+      ? "暂无待办事项，添加一条开始吧"
+      : filter === "pending"
+        ? "没有待完成的事项"
+        : "还没有已完成的事项";
+  clearBtn.hidden = done === 0;
+
+  [...filterEl.children].forEach((btn) => {
+    btn.classList.toggle("active", btn.dataset.filter === filter);
+  });
 }
 
 form.addEventListener("submit", (e) => {
@@ -123,6 +150,13 @@ form.addEventListener("submit", (e) => {
   save();
   render();
   input.focus();
+});
+
+filterEl.addEventListener("click", (e) => {
+  const btn = e.target.closest("[data-filter]");
+  if (!btn) return;
+  filter = btn.dataset.filter;
+  render();
 });
 
 clearBtn.addEventListener("click", () => {
